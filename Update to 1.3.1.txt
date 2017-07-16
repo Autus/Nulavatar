@@ -1,0 +1,186 @@
+########################################
+#      -- Update Instructions --
+# 
+# MOD Title: NulAvatar
+# From Version: 1.3.0
+# To Version: 1.3.1
+# 
+# Update Instructions by: Nuladion
+# 
+# Update Difficulty: Easy
+# Update Time: 1 Minute
+# 
+########################################
+# 
+# How to update:
+# o	Edit your PHP files as described below!
+# o	Update your database using nulavatar_update_v131.php!
+# 
+########################################
+
+# 
+#-----[ COPY & RUN ]------------------------------------
+# After uploading, run this file in your browser.
+# Delete this file when the installation has finished succesfully!
+# 
+COPY nulavatar_update_v131.php TO nulavatar_update_v131.php
+
+# 
+#-----[ OPEN ]------------------------------------------
+# 
+nulavatar.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+#
+// [START] Fix for register_globals! Thanks alot Mav! ^_^
+if(is_array($_GET))
+{
+extract($_GET, EXTR_PREFIX_SAME, "get");
+}
+if(is_array($_POST))
+{
+extract($_POST, EXTR_PREFIX_SAME, "post");
+}
+// [END] Fix for register_globals!
+
+$phpbb_root_path = './';
+include($phpbb_root_path . 'extension.inc');
+include($phpbb_root_path . 'common.' . $phpEx);
+
+# 
+#-----[ REPLACE WITH ]------------------------------------
+# The fix was at the wrong place. It needs to be after the includes :)
+# 
+$phpbb_root_path = './';
+include($phpbb_root_path . 'extension.inc');
+include($phpbb_root_path . 'common.' . $phpEx);
+
+// [START] Fix for register_globals! Thanks alot Mav! ^_^
+if(is_array($_GET))
+{
+extract($_GET, EXTR_PREFIX_SAME, "get");
+}
+if(is_array($_POST))
+{
+extract($_POST, EXTR_PREFIX_SAME, "post");
+}
+// [END] Fix for register_globals!
+
+# 
+#-----[ FIND ]------------------------------------------ 
+#
+//
+// [START] Save it! :)
+//
+if($action == "save")
+{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------
+# This should fix the images exploit some people were experiencing at their site.
+# 
+	// Check if Save action is called from Nulavatar page.
+	// This should prevent users from calling NA from an other page to gain access to images they do not have.
+	if($_SERVER['HTTP_REFERER'] != 'http://' . $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF']) {
+		message_die(GENERAL_MESSAGE, $lang['nulavatar_invalidpage']);
+	}
+
+# 
+#-----[ OPEN ]------------------------------------------
+# 
+language/lang_english/lang_main.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+$lang['nulavatar_no_image'] = "no image";
+
+# 
+#-----[ AFTER, ADD ]------------------------------------ 
+# 
+$lang['nulavatar_invalidpage'] = "You are only allowed to save your avatar from the NulAvatar page.";
+
+# 
+#-----[ OPEN ]------------------------------------------
+# 
+admin/admin_nulavatar.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+#
+// [START] Fix for register_globals! Thanks alot Mav! ^_^
+if(is_array($_GET))
+{
+extract($_GET, EXTR_PREFIX_SAME, "get");
+}
+if(is_array($_POST))
+{
+extract($_POST, EXTR_PREFIX_SAME, "post");
+}
+// [END] Fix for register_globals!
+
+if(!empty($setmodules) )
+{
+	$file = basename(__FILE__);
+	$module['NulMODs']['NulAvatar'] = $file;
+	return;
+}
+
+//
+// Let's set the root dir for phpBB
+//
+$phpbb_root_path = '../';
+require($phpbb_root_path . 'extension.inc');
+require('pagestart.' . $phpEx);
+
+# 
+#-----[ REPLACE WITH ]------------------------------------
+# The fix was at the wrong place. It needs to be after the includes :)
+# 
+if(!empty($setmodules) )
+{
+	$file = basename(__FILE__);
+	$module['NulMODs']['NulAvatar'] = $file;
+	return;
+}
+
+//
+// Let's set the root dir for phpBB
+//
+$phpbb_root_path = '../';
+require($phpbb_root_path . 'extension.inc');
+require('pagestart.' . $phpEx);
+
+// [START] Fix for register_globals! Thanks alot Mav! ^_^
+if(is_array($_GET))
+{
+extract($_GET, EXTR_PREFIX_SAME, "get");
+}
+if(is_array($_POST))
+{
+extract($_POST, EXTR_PREFIX_SAME, "post");
+}
+// [END] Fix for register_globals!
+
+
+# 
+#-----[ OPEN ]------------------------------------------
+# 
+templates/subSilver/admin/nulavatar_admin_body.tpl
+
+# 
+#-----[ FIND ]------------------------------------------ 
+#
+	<b>NulAvatar v{VERSION}</b> made by <b>Nuladion</b><br />-- <a href="http://www.nuladion.com" target="_blank"><b>http://www.nuladion.com</b></a> --
+
+# 
+#-----[ REPLACE WITH ]------------------------------------
+# This doesn't change anything in the functionality of NulAvatar. It just changes the link to my MODs site ^^;
+# 
+	<b>NulAvatar v{VERSION}</b> made by <b>Nuladion</b><br />-- <a href="http://http://mods.nuladion.net" target="_blank"><b>http://mods.nuladion.net</b></a> --
+
+# 
+#-----[ SAVE/CLOSE ALL FILES ]--------------------------
+# 
+# EoM 

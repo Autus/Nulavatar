@@ -1,0 +1,30 @@
+####################################################
+##
+##	Very Quick FAQ --- NulAvatar
+##
+####################################################
+
+I'll write up a decent Guide/FAQ soon.
+
+If you're having problems and cannot find the answer in this FAQ, please post your problem in
+the NulAvatar thread located here: http://www.mods.best-dev.com/viewtopic.php?t=1262
+Make sure to include any error message(s) you recieve (if any)!
+
+Here are the most common questions/problems:
+
+Q: Can I add more images?
+A: Yes! Just upload your images to /images/nulavatar/ and make sure they're in PNG format. You
+   can then add them by using Edit Images in the NulAvatar Admin Panels.
+
+Q: When one of my users tries to save his/her Avatar, he/she gets an error!
+Q: The Avatars aren't being saved!
+A: Make sure your images/nulavatar_avatars/ folder is CHMODded to 777.
+
+Q: I want to have people pay to use certain images, is that possible?
+A: Yes. If you have the Shop MOD or ADR installed you can specify an item users need to have in
+   their inventory before they can select certain image. You can do this by filling in the
+   item's name in the Item Needed box of the images you want people to have an item for!
+
+Q: Whever I click any link/button, the page just refreshes and nothing happens?
+A: Are you using phpBB 2.0.9+? If so, go here for a fix:
+    http://www.mods.best-dev.com/viewtopic.php?p=13527#13527

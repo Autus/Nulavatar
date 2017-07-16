@@ -1,0 +1,166 @@
+########################################
+#      -- Update Instructions --
+# 
+# MOD Title: NulAvatar
+# From Version: 1.1.0
+# To Version: 1.2.0
+# 
+# Update Instructions by: Nuladion
+# 
+# Update Difficulty: Easy
+# Update Time: 5 Minutes
+# 
+########################################
+# 
+# How to update:
+# o	Edit your PHP files as described below!
+# o	Update your database using nulavatar_update_v120.php!
+# 
+########################################
+
+# 
+#-----[ COPY ]------------------------------------------
+# Since the nulavatar.php which came with v1.1.0 and the nulavatar.php you'd get if 
+# you updated to v1.1.0 manually are different (I seemingly forgot to apply a few changes in the included 
+# nulavatar.php) I cannot provide manual update instructions (as no nulavatar.php will be the same).
+# Therefor, please just upload and overwrite these files!
+# 
+COPY nulavatar.php TO nulavatar.php
+COPY admin/admin_nulavatar.php TO admin/nulavatar.php
+COPY templates/subSilver/admin/nulavatar_admin_body.tpl TO templates/subSilver/admin/nulavatar_admin_body.tpl
+
+# 
+#-----[ COPY & RUN ]------------------------------------
+# After uploading, run this file in your browser.
+# Delete this file when the installation has finished succesfully!
+# 
+COPY nulavatar_update_v120.php TO nulavatar_update_v120.php
+
+# 
+#-----[ OPEN ]------------------------------------------
+# 
+language/lang_english/lang_admin.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+$lang['nulavatar_settings_rpgsystem'] = "<b>RPG MODification</b><br />Note: If you have the Shop MOD but no RPG MOD, just select <i>Moogies MOD</i>!";
+
+# 
+#-----[ REPLACE WITH ]------------------------------------
+# 
+$lang['nulavatar_settings_rpgsystem'] = "<b>RPG MODification</b><br />Note: If you have no RPG MOD or only the Shop MOD, just select <i>Moogies MOD</i>. If you do not have a RPG MOD nor the Shop MOD, select <i>Moogies MOD</i> and make sure not to use the <i>Item Needed</i> field when adding/editing images!";
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+$lang['nulavatar_settings_imagetype_gif'] = "GIF";
+
+# 
+#-----[ AFTER, ADD ]------------------------------------ 
+# 
+$lang['nulavatar_settings_title_generalconfig'] = "General Config";
+$lang['nulavatar_settings_display'] = "<b>Display Mode</b><br />The way of displaying the NulAvatar items. <i>Original</i> works with dropdown boxes for each layer (like NA v1.0.0 and v1.1.0), <i>Shelves</i> displays every image on the NulAvatar page on which you can click to change layer.";
+$lang['nulavatar_settings_display_0'] = "Original";
+$lang['nulavatar_settings_display_1'] = "Shelves";
+$lang['nulavatar_settings_eamountofitems'] = "<b>Amount of Items</b><br />If <i>Shelves</i> has been selected as <i>Display Mode</i>, specify here how many items NA should show per row.";
+$lang['nulavatar_settings_replaceavatar'] = "<b>Replace Avatar</b><br />If set to <i>Yes</i> the users forum avatar will be replaced by their NulAvatar (if they have one, else nothing will be shown). If set to <i>No</i> both their forum avatar and NulAvatar will be shown. If set to <i>Only if user has NulAvatar</i> the users NulAvatar will be shown if the user has one. If they haven't, their forum avatar will be shown.";
+$lang['nulavatar_settings_replaceavatar_0'] = "No";
+$lang['nulavatar_settings_replaceavatar_1'] = "Yes";
+$lang['nulavatar_settings_replaceavatar_2'] = "Only if user has NulAvatar";
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+language/lang_english/lang_main.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+$lang['nulavatar_nolayers'] = "The Administrator still needs to configure NulAvatar.<br />Please come back soon!";
+
+# 
+#-----[ AFTER, ADD ]------------------------------------
+# 
+$lang['nulavatar_no_image'] = "no image";
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+viewtopic.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+	// NulAvatar [START]
+		if(file_exists($phpbb_root_path."images/nulavatar_avatars/".$postrow[$i]['user_id'].".png"))
+		{ $nulavatar = '<img src="'.$phpbb_root_path.'images/nulavatar_avatars/'.$postrow[$i]['user_id'].'.png"><br />'; }
+		else { $nulavatar = ''; }
+	// NulAvatar [END]
+
+# 
+#-----[ REPLACE WITH ]------------------------------------ 
+# 
+	// NulAvatar [START]
+		if(file_exists($phpbb_root_path."images/nulavatar_avatars/".$postrow[$i]['user_id'].".png"))
+		{ $nulavatar = '<img src="'.$phpbb_root_path.'images/nulavatar_avatars/'.$postrow[$i]['user_id'].'.png"><br />'; }
+		else { $nulavatar = ''; }
+
+		// Check if NA replaces the forum avatar!
+		$sql = "SELECT config_value FROM ". $table_prefix ."nulavatar_settings WHERE config_name = 'replaceavatar' "; 
+		if ( !($result = $db->sql_query($sql)) ) { message_die(GENERAL_ERROR, 'Error retrieving data', '', __LINE__, __FILE__, $sql); } 
+
+		while ( $row = $db->sql_fetchrow($result) ) 
+		{
+			if($row['config_value'] == 1) {
+				$poster_avatar = '';
+			}
+			if(($row['config_value'] == 2) && ($nulavatar != '')) {
+				$poster_avatar = '';
+			}
+		}
+	// NulAvatar [END]
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+includes/usercp_viewprofile.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+// NulAvatar [START]
+	// Check if user has an Avatar. If so, display it!
+	if(file_exists($phpbb_root_path."images/nulavatar_avatars/".$profiledata['user_id'].".png"))
+	{ $nulavatar = '<img src="'.$phpbb_root_path.'images/nulavatar_avatars/'.$profiledata['user_id'].'.png"><br />'; }
+	else { $nulavatar = ''; }
+// NulAvatar [END]
+
+# 
+#-----[ REPLACE WITH ]------------------------------------ 
+# 
+// NulAvatar [START]
+	// Check if user has an Avatar. If so, display it!
+	if(file_exists($phpbb_root_path."images/nulavatar_avatars/".$profiledata['user_id'].".png"))
+	{ $nulavatar = '<img src="'.$phpbb_root_path.'images/nulavatar_avatars/'.$profiledata['user_id'].'.png"><br />'; }
+	else { $nulavatar = ''; }
+
+	// Check if NA replaces the forum avatar!
+	$sql = "SELECT config_value FROM ". $table_prefix ."nulavatar_settings WHERE config_name = 'replaceavatar' "; 
+	if ( !($result = $db->sql_query($sql)) ) { message_die(GENERAL_ERROR, 'Error retrieving data', '', __LINE__, __FILE__, $sql); } 
+
+	while ( $row = $db->sql_fetchrow($result) ) 
+	{
+		if($row['config_value'] == 1) {
+			$avatar_img = '';
+		}
+		if(($row['config_value'] == 2) && ($nulavatar != '')) {
+			$avatar_img = '';
+		}
+	}
+// NulAvatar [END]
+
+# 
+#-----[ SAVE/CLOSE ALL FILES ]--------------------------
+# 
+# EoM 

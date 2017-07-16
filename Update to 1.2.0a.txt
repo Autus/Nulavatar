@@ -1,0 +1,59 @@
+########################################
+#      -- Update Instructions --
+# 
+# MOD Title: NulAvatar
+# From Version: 1.2.0
+# To Version: 1.2.0a
+# 
+# Update Instructions by: Nuladion
+# 
+# Update Difficulty: Easy
+# Update Time: 1 Minute
+# 
+########################################
+# 
+# How to update:
+# o	Edit your PHP files as described below!
+# o	Update your database using nulavatar_update_v120a.php!
+# 
+########################################
+
+# 
+#-----[ COPY & RUN ]------------------------------------
+# After uploading, run this file in your browser.
+# Delete this file when the installation has finished succesfully!
+# 
+COPY nulavatar_update_v120a.php TO nulavatar_update_v120a.php
+
+# 
+#-----[ OPEN ]------------------------------------------
+# 
+nulavatar.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# The file was named nulavatar_upd.php during development. 
+# Seems like I forgot to change this back to nulavatar.php when I released it >_<'
+#
+$file = "nulavatar_upd.php";
+
+# 
+#-----[ REPLACE WITH ]------------------------------------
+# 
+$file = "nulavatar.php";
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# This caused the Graphical display mode to get all screwed up in Firefox. Works OK now :)
+# 
+			$items_shelf .= '</tr><td width="100" valign="top" class="row1"><span class="gen"><b>'.str_replace("_"," ",$row['name']).'</b></span>'.$no_image_text.'</td>';
+
+# 
+#-----[ REPLACE WITH ]------------------------------------ 
+# 
+			$items_shelf .= '<td width="100" valign="top" class="row1"><span class="gen"><b>'.str_replace("_"," ",$row['name']).'</b></span>'.$no_image_text.'</td></tr>';
+
+# 
+#-----[ SAVE/CLOSE ALL FILES ]--------------------------
+# 
+# EoM 

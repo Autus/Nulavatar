@@ -1,0 +1,106 @@
+########################################
+#      -- Update Instructions --
+# 
+# MOD Title: NulAvatar
+# From Version: 1.2.0a
+# To Version: 1.3.0
+# 
+# Update Instructions by: Nuladion
+# 
+# Update Difficulty: Easy
+# Update Time: 1 Minute
+# 
+########################################
+# 
+# How to update:
+# o	Edit your PHP files as described below!
+# o	Update your database using nulavatar_update_v130.php!
+# 
+########################################
+
+# 
+#-----[ COPY & RUN ]------------------------------------
+# After uploading, run this file in your browser.
+# Delete this file when the installation has finished succesfully!
+# 
+COPY nulavatar_update_v130.php TO nulavatar_update_v130.php
+
+# 
+#-----[ OPEN ]------------------------------------------
+# 
+nulavatar.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+#
+				// ADVANCED DUNGEONS & RABBITS
+				//    Thanks to Seteo-Bloke for this code!
+				if($rpgsystem == "adr")
+				{
+					$UsqlA = "SELECT * FROM phpbb_adr_shops_items 
+						WHERE item_owner_id = '".$userdata['user_id']."' 
+						AND item_in_shop = 0 
+						AND item_name = '".$row2['itemneeded']."'
+					"; 
+					if( !($UresultA = $db->sql_query($UsqlA)) ) 
+					{ message_die(GENERAL_MESSAGE, "<b>Fatal Error!</b><br />".mysql_error()); } 
+					$UrowA = mysql_fetch_array($UresultA); 
+					
+					if ( $UrowA['item_name'] == $row2['itemneeded'] ) 
+					{ 
+						$i_list .= '<option value="' . $row2['image'] . '" '.$checked.'>' . $row2['name'] . '</option>'; 
+					
+						if(($firstimage == '') OR ($checked != '')) 
+						{ $firstimage = $row2['image']; } 
+
+						$items_shelf .= '<img src="'.$phpbb_root_path.$sprites_path.'/'.$row2['image'].'" onClick="document.images[\''.$imagename.'\'].src = \''.$phpbb_root_path.$sprites_path.'/'.$row2['image'].'\'; document.nulavatarlayers.'.$row['name'].'.value=\''.$row2['image'].'\'">';
+					} 
+				}
+
+# 
+#-----[ AFTER, ADD ]------------------------------------
+# 
+				// SHOP MOD v3.0.0
+				if($rpgsystem == "shop3")
+				{
+					$UsqlS = "SELECT * FROM " . USER_ITEMS_TABLE . "
+						WHERE user_id = '".$userdata['user_id']."' 
+						AND item_name = '".$row2['itemneeded']."'
+					"; 
+					if( !($UresultS = $db->sql_query($UsqlS)) ) 
+					{ message_die(GENERAL_MESSAGE, "<b>Fatal Error!</b><br />".mysql_error()); } 
+					$UrowS = mysql_fetch_array($UresultS); 
+					
+					if ( $UrowS['item_name'] == $row2['itemneeded'] ) 
+					{ 
+						$i_list .= '<option value="' . $row2['image'] . '" '.$checked.'>' . $row2['name'] . '</option>'; 
+					
+						if(($firstimage == '') OR ($checked != '')) 
+						{ $firstimage = $row2['image']; } 
+
+						$items_shelf .= '<img src="'.$phpbb_root_path.$sprites_path.'/'.$row2['image'].'" onClick="document.images[\''.$imagename.'\'].src = \''.$phpbb_root_path.$sprites_path.'/'.$row2['image'].'\'; document.nulavatarlayers.'.$row['name'].'.value=\''.$row2['image'].'\'">';
+					} 
+				}
+
+# 
+#-----[ OPEN ]------------------------------------------
+# 
+language/lang_english/lang_admin.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+$lang['nulavatar_settings_rpgsystem'] = "<b>RPG MODification</b><br />Note: If you have no RPG MOD or only the Shop MOD, just select <i>Moogies MOD</i>. If you do not have a RPG MOD nor the Shop MOD, select <i>Moogies MOD</i> and make sure not to use the <i>Item Needed</i> field when adding/editing images!";
+$lang['nulavatar_settings_rpgsystem_moogies'] = "Moogies MOD";
+
+# 
+#-----[ REPLACE WITH ]------------------------------------ 
+# 
+$lang['nulavatar_settings_rpgsystem'] = "<b>RPG MODification</b><br />If you have Zaraths Shop MOD v1.2.0 - 2.6.0, select <i>Shop MOD</i>. If you have v3.0.0+ of his MOD, select <i>Shop MOD v3</i>.<br />If you do not have a RPG MOD nor the Shop MOD, select <i>Shop MOD</i> and make sure not to use the <i>Item Needed</i> field when adding/editing images!";
+$lang['nulavatar_settings_rpgsystem_moogies'] = "Shop MOD";
+$lang['nulavatar_settings_rpgsystem_shop3'] = "Shop MOD v3";
+
+# 
+#-----[ SAVE/CLOSE ALL FILES ]--------------------------
+# 
+# EoM 

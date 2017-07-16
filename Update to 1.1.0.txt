@@ -1,0 +1,641 @@
+########################################
+#      -- Update Instructions --
+# 
+# MOD Title: NulAvatar
+# From Version: 1.0.0
+# To Version: 1.1.0
+# 
+# Update Instructions by: Nuladion
+# 
+# Update Difficulty: Easy/Intermediate
+# Update Time: 15 Minutes
+# 
+########################################
+# 
+# How to update:
+# o	Edit your PHP files as described below!
+# 
+########################################
+
+# 
+#-----[ COPY & RUN ]------------------------------------------ 
+# After uploading, run this file in your browser.
+# Delete this file when the installation has finished succesfully!
+# 
+COPY nulavatar_update_v110.php TO nulavatar_update_v110.php
+
+
+########################################
+# 
+# Either do all the edits listed below,
+# or re-upload all *.php and *.tpl files!
+# 
+# Make sure you've done the step listed above though!!
+# 
+########################################
+
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+language/lang_english/lang_main.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+$lang['nulavatar_compulsive'] = "Compulsive";
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+$lang['nulavatar_nolayers'] = "The Administrator still needs to configure NulAvatar.<br />Please come back soon!";
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+language/lang_english/lang_admin.php
+
+# 
+#-----[ FIND & DELETE]------------------------------------------ 
+# The version number is now saved in the nulmods table, to make NulAvatar work with NulUpdate! :)
+# So we can delete these lines!
+# 
+// MOD Version Number
+$lang['nulavatar_version'] = "1.0.0";
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+$lang['nulavatar_editimage_succesful'] = "Image edited succesfully!";
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+$lang['nulavatar_nolayers'] = "You'll have to create some layers before you can add any images!";
+
+// Locations
+$lang['nulavatar_loc_admin'] = "NulAvatar Admin Panel";
+$lang['nulavatar_loc_main'] = "Main";
+$lang['nulavatar_loc_layers'] = "Layers";
+$lang['nulavatar_loc_addlayer'] = "Add a Layer";
+$lang['nulavatar_loc_dellayer'] = "Delete Layer";
+$lang['nulavatar_loc_movelayer'] = "Move a Layer";
+$lang['nulavatar_loc_editlayer'] = "Edit Layer";
+$lang['nulavatar_loc_images'] = "Images";
+$lang['nulavatar_loc_addimage'] = "Add an Image";
+$lang['nulavatar_loc_delimage'] = "Delete an Image";
+$lang['nulavatar_loc_editimage'] = "Edit Image";
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+$lang['nulavatar_settings_avatar_width'] = "<b>Avatar Width</b>";
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+$lang['nulavatar_settings_title_rpgmod'] = "RPG System";
+$lang['nulavatar_settings_rpgsystem'] = "<b>RPG MODification</b><br />Note: If you have the Shop MOD but no RPG MOD, just select <i>Moogies MOD</i>!";
+$lang['nulavatar_settings_rpgsystem_moogies'] = "Moogies MOD";
+$lang['nulavatar_settings_rpgsystem_adr'] = "Advanced Dungeons & Rabbits";
+$lang['nulavatar_settings_imagetype'] = "<b>Imagetype</b><br />The format of your layer images! <i>NOT</i> of the exported image (will always be PNG)!";
+$lang['nulavatar_settings_imagetype_png'] = "PNG";
+$lang['nulavatar_settings_imagetype_gif'] = "GIF";
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+nulavatar.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+	$zindex = $tot_layers;
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+	// Prevent users from accessing NulAvatar if there aren't any layers yet!
+	if($tot_layers < 1)
+	{ message_die(GENERAL_MESSAGE, $lang['nulavatar_nolayers']); }
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+$img_width = $config_row['config_value'];
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+// Get RPG System
+$sqlconfig = "SELECT * FROM ".$table_prefix."nulavatar_settings WHERE config_name = 'rpgsystem' ";
+if ( !($resultconfig = $db->sql_query($sqlconfig)) )
+{ message_die(GENERAL_MESSAGE, "<b>Fatal Error!</b><br />".mysql_error()); }
+$config_row = mysql_fetch_array($resultconfig); 
+$rpgsystem = $config_row['config_value'];
+// Get Image Type
+$sqlconfig = "SELECT * FROM ".$table_prefix."nulavatar_settings WHERE config_name = 'imagetype' ";
+if ( !($resultconfig = $db->sql_query($sqlconfig)) )
+{ message_die(GENERAL_MESSAGE, "<b>Fatal Error!</b><br />".mysql_error()); }
+$config_row = mysql_fetch_array($resultconfig); 
+$imagetype = $config_row['config_value'];
+$imagecreate = "imagecreatefrom".$imagetype;
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+			// check for item, if itemneeded is set to Yes(=1)!
+			if($row2['itemneeded'] != "")
+			{
+				$Usql = "SELECT user_items FROM ".USERS_TABLE." WHERE user_id = '".$userdata['user_id']."' ";
+				if ( !($Uresult = $db->sql_query($Usql)) )
+				{ message_die(GENERAL_MESSAGE, "<b>Fatal Error!</b><br />".mysql_error()); }
+				$Urow = mysql_fetch_array($Uresult); 
+
+				if (substr_count($Urow['user_items'],"ß".$row2['itemneeded']."Þ") > 0)
+				{
+					$i_list .= '<option value="' . $row2['image'] . '" '.$checked.'>' . $row2['name'] . '</option>'; 
+
+					if(($firstimage == '') OR ($checked != ''))
+					{ $firstimage = $row2['image']; }
+				}
+			}
+
+# 
+#-----[ REPLACE WITH ]------------------------------------------ 
+# 
+			// check for item, if itemneeded is set to Yes(=1)!
+			if($row2['itemneeded'] != "")
+			{
+				// MOOGIES MOD
+				//    Thanks to theanimewizard for fixing a problem in this code! ^^
+				if($rpgsystem == "moogies")
+				{
+					$UsqlM = "SELECT user_items FROM ".USERS_TABLE." WHERE user_id = '".$userdata['user_id']."' ";
+					if ( !($UresultM = $db->sql_query($UsqlM)) )
+					{ message_die(GENERAL_MESSAGE, "<b>Fatal Error!</b><br />".mysql_error()); }
+					$UrowM = mysql_fetch_array($UresultM); 
+	
+					if (substr_count($UrowM['user_items'],"ß".$row2['itemneeded']."Þ") > 0)
+					{
+						$i_list .= '<option value="' . $row2['image'] . '" '.$checked.'>' . $row2['name'] . '</option>'; 
+	
+						if(($firstimage == '') OR ($checked != ''))
+						{ $firstimage = $row2['image']; }
+					}
+				}
+				// ADVANCED DUNGEONS & RABBITS
+				//    Thanks to Seteo-Bloke for this code!
+				if($rpgsystem == "adr")
+				{
+					$UsqlA = "SELECT * FROM phpbb_adr_shops_items 
+						WHERE item_owner_id = '".$userdata['user_id']."' 
+						AND item_in_shop = 0 
+						AND item_name = '".$row2['itemneeded']."'
+					"; 
+					if( !($UresultA = $db->sql_query($UsqlA)) ) 
+					{ message_die(GENERAL_MESSAGE, "<b>Fatal Error!</b><br />".mysql_error()); } 
+					$UrowA = mysql_fetch_array($UresultA); 
+					
+					if ( $UrowA['item_name'] == $row2['itemneeded'] ) 
+					{ 
+						$i_list .= '<option value="' . $row2['image'] . '" '.$checked.'>' . $row2['name'] . '</option>'; 
+					
+						if(($firstimage == '') OR ($checked != '')) 
+						{ $firstimage = $row2['image']; } 
+					} 
+				}
+			}
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//	$sprite_1 = @imagecreatefrompng($phpbb_root_path.$sprites_path.'/spacer.png');
+	$nulavatar = false;
+
+	for( $iii = 0; $iii < $tot_layers; $iii++ )
+	{
+			$Lrow = mysql_fetch_array($Lresult); 
+			if($HTTP_POST_VARS[$Lrow['name']] != 'spacer.gif')
+			{
+				if($nulavatar == false)
+				{
+					$sprite_1 = @imagecreatefrompng($phpbb_root_path.$sprites_path.'/'.$HTTP_POST_VARS[$Lrow['name']]);
+					$nulavatar = true;
+				}
+				else
+				{
+					$image = @imagecreatefrompng($phpbb_root_path.$sprites_path.'/'.$HTTP_POST_VARS[$Lrow['name']]);
+					@imagecopy ($sprite_1, $image, 0, 0, 0, 0, $tot_width, $tot_height);
+					@ImageDestroy($image);
+				}
+			}
+	}
+
+# 
+#-----[ REPLACE WITH ]------------------------------------------ 
+# 
+	$nulavatar = false;
+
+	for( $iii = 0; $iii < $tot_layers; $iii++ )
+	{
+			$Lrow = mysql_fetch_array($Lresult); 
+			if($HTTP_POST_VARS[$Lrow['name']] != 'spacer.gif')
+			{
+				if($nulavatar == false)
+				{
+					$sprite_1 = @$imagecreate($phpbb_root_path.$sprites_path.'/'.$HTTP_POST_VARS[$Lrow['name']]);
+					$nulavatar = true;
+				}
+				else
+				{
+					$image = @$imagecreate($phpbb_root_path.$sprites_path.'/'.$HTTP_POST_VARS[$Lrow['name']]);
+					@imagecopy ($sprite_1, $image, 0, 0, 0, 0, $tot_width, $tot_height);
+					@ImageDestroy($image);
+				}
+			}
+	}
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// General thingies
+//
+   $template->assign_vars(array( 
+	      	'OUTPUT' => $useaction,
+		'TITLE' => $mod_title
+		   )); 
+   $template->assign_block_vars('', array()); 
+
+# 
+#-----[ REPLACE WITH ]------------------------------------------ 
+# 
+//
+// General thingies
+//
+   $location = " -> <a href=\"".$file."\" class=\"nav\">NulAvatar</a>";
+
+   $template->assign_vars(array( 
+	      	'OUTPUT' => $useaction,
+		'LOCATION' => $location,
+		'TITLE' => $mod_title
+		   )); 
+   $template->assign_block_vars('', array()); 
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+admin/admin_nulavatar.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] Main Page
+//
+if($action == "")
+{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+$location = '<a href="'.$file.'" class="nav">'.$lang['nulavatar_loc_main'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] Layers Main Page
+//
+if($action == "layers")
+{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+	$location = '<a href="'.$file.'?action=layers" class="nav">'.$lang['nulavatar_loc_layers'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] New Layer
+//
+if($action == "addlayer")
+{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+	$location = '<a href="'.$file.'?action=layers" class="nav">'.$lang['nulavatar_loc_layers'].'</a> -> <a href="'.$file.'?action=addlayer" class="nav">'.$lang['nulavatar_loc_addlayer'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] Create new Layer
+//
+if($action == "doaddlayer")
+{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+	$location = '<a href="'.$file.'?action=layers" class="nav">'.$lang['nulavatar_loc_layers'].'</a> -> <a href="'.$file.'?action=addlayer" class="nav">'.$lang['nulavatar_loc_addlayer'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] Delete Layer
+//
+if($action == "deletelayer")
+{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+	$location = '<a href="'.$file.'?action=layers" class="nav">'.$lang['nulavatar_loc_layers'].'</a> -> <a href="'.$file.'?action=layers" class="nav">'.$lang['nulavatar_loc_dellayer'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] Move Layer
+//
+if($action == "movelayer")
+{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+	$location = '<a href="'.$file.'?action=layers" class="nav">'.$lang['nulavatar_loc_layers'].'</a> -> <a href="'.$file.'?action=layers" class="nav">'.$lang['nulavatar_loc_movelayer'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] Edit Layer
+//
+if($action == "editlayer")
+{
+	if($layer == "")
+	{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+		$location = '<a href="'.$file.'?action=layers" class="nav">'.$lang['nulavatar_loc_layers'].'</a> -> <a href="'.$file.'?action=editlayer" class="nav">'.$lang['nulavatar_loc_editlayer'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+	if($row['compulsive'] == 0)
+
+# 
+#-----[ BEFORE, ADD ]------------------------------------------ 
+# 
+	$location = '<a href="'.$file.'?action=layers" class="nav">'.$lang['nulavatar_loc_layers'].'</a> -> <a href="'.$file.'?action=editlayer&layer='.$layer.'" class="nav">'.$lang['nulavatar_loc_editlayer'].' "'.$row['name'].'" </a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] Do Edit Layer
+//
+if($action == "doeditlayer")
+{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+	$location = '<a href="'.$file.'?action=layers" class="nav">'.$lang['nulavatar_loc_layers'].'</a> -> <a href="'.$file.'?action=layers" class="nav">'.$lang['nulavatar_loc_editlayer'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] Images Main Page
+//
+if($action == "images")
+{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+	$location = '<a href="'.$file.'?action=layers" class="nav">'.$lang['nulavatar_loc_images'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] Add image
+//
+if($action == "addimage")
+{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+	$location = '<a href="'.$file.'?action=images" class="nav">'.$lang['nulavatar_loc_images'].'</a> -> <a href="'.$file.'?action=addimage" class="nav">'.$lang['nulavatar_loc_addimage'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] Add new image
+//
+if($action == "doaddimage")
+{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+	$location = '<a href="'.$file.'?action=images" class="nav">'.$lang['nulavatar_loc_images'].'</a> -> <a href="'.$file.'?action=addimage" class="nav">'.$lang['nulavatar_loc_addimage'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] Delete Image
+//
+if($action == "deleteimage")
+{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+	$location = '<a href="'.$file.'?action=images" class="nav">'.$lang['nulavatar_loc_images'].'</a> -> <a href="'.$file.'?action=images" class="nav">'.$lang['nulavatar_loc_delimage'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] Edit image
+//
+if($action == "editimage")
+{
+	if($image == "")
+	{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+		$location = '<a href="'.$file.'?action=images" class="nav">'.$lang['nulavatar_loc_images'].'</a> -> <a href="'.$file.'?action=images" class="nav">'.$lang['nulavatar_loc_editimage'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+	$imagerow = mysql_fetch_array($result); 
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+	$location = '<a href="'.$file.'?action=images" class="nav">'.$lang['nulavatar_loc_images'].'</a> -> <a href="'.$file.'?action=editimage&image='.$image.'" class="nav">'.$lang['nulavatar_loc_editimage'].' "'.$imagerow['name'].'"</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] Do Edit Image
+//
+if($action == "doeditimage")
+{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+	$location = '<a href="'.$file.'?action=images" class="nav">'.$lang['nulavatar_loc_images'].'</a> -> <a href="'.$file.'?action=images" class="nav">'.$lang['nulavatar_loc_editimage'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] Get settings
+//
+if ($action == "settings")
+{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+$location = '<a href="'.$file.'?action=settings" class="nav">'.$lang['nulavatar_settings'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// [START] Save settings
+//
+if ($action == "change")
+{
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+$location = '<a href="'.$file.'?action=settings" class="nav">'.$lang['nulavatar_settings'].'</a>';
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+	for( $x = 0; $x < mysql_num_rows($Lresult); $x++ )
+	{
+	$Lrow = mysql_fetch_array($Lresult); 
+
+# 
+#-----[ BEFORE, ADD ]------------------------------------------ 
+# 
+	// Prevent the Admin from adding images if there aren't any layers yet!
+	if(mysql_num_rows($Lresult) < 1)
+	{ message_die(GENERAL_MESSAGE, '<br />'.$lang['nulavatar_nolayers'].'<br /><br />'); }
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+	$sql = "UPDATE ".$table_prefix."nulavatar_settings SET config_value = '".$avatar_width."' WHERE config_name = 'avatar_width' ";
+		if ( !($result = $db->sql_query($sql)) ) { message_die(GENERAL_MESSAGE, "<b>Fatal Error:</b><br />".mysql_error()); }
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+	$sql = "UPDATE ".$table_prefix."nulavatar_settings SET config_value = '".$rpgsystem."' WHERE config_name = 'rpgsystem' ";
+		if ( !($result = $db->sql_query($sql)) ) { message_die(GENERAL_MESSAGE, "<b>Fatal Error:</b><br />".mysql_error()); }
+	$sql = "UPDATE ".$table_prefix."nulavatar_settings SET config_value = '".$imagetype."' WHERE config_name = 'imagetype' ";
+		if ( !($result = $db->sql_query($sql)) ) { message_die(GENERAL_MESSAGE, "<b>Fatal Error:</b><br />".mysql_error()); }
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// General thingies
+//
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# h00t, NulAvatar now works with NulUpdate! :)
+# 
+// [START] Get version number!
+	$Vsql = "SELECT version FROM ".$table_prefix."nulmods WHERE title = 'NulAvatar' ";
+	if ( !($Vresult = $db->sql_query($Vsql)) ) { message_die(GENERAL_MESSAGE, "<b>Fatal Error!</b><br />".mysql_error()); }
+	$Vrow = mysql_fetch_array($Vresult); 
+	$nulavatar_version = $Vrow['version'];
+// [END] Get version number!
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+	      	'USEACTION' => $useaction,
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+		'LOCATION' => $location,
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+templates/subSilver/nulavatar_body.tpl
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+  <table width="99%" cellpadding="4" cellspacing="1" border="0" align="center" class="forumline"> 
+
+# 
+#-----[ BEFORE, ADD ]------------------------------------------ 
+# 
+  <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center"> 
+   <tr> 
+     <td align="left"><span class="nav"><a href="{U_INDEX}" class="nav">{L_INDEX}</a>{LOCATION}</span></td> 
+   </tr> 
+  </table> 
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+templates/subSilver/admin/nulavatar_admin_body.tpl
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+  <table width="99%" cellpadding="4" cellspacing="1" border="0" align="center" class="forumline"> 
+   <tr> 
+     <th class="thHead">{L_USE_TITLE}</th> 
+   </tr> 
+   {USEACTION} 
+  </table> 
+
+# 
+#-----[ BEFORE, ADD ]------------------------------------------ 
+# 
+  <table width="100%" cellspacing="2" cellpadding="2" border="0" align="center"> 
+   <tr> 
+     <td align="left"><span class="nav">{LOCATION}</span></td> 
+   </tr> 
+  </table> 
+
+# 
+#-----[ SAVE/CLOSE ALL FILES ]------------------------------------------ 
+# 
+# EoM 

@@ -1,0 +1,440 @@
+############################################################## 
+## MOD Title: 		NulAvatar
+## MOD Author: 		Nuladion < nuladion@gmail.com > (Guido Kessels) http://mods.nuladion.net 
+## MOD Editor:		Autus < contact@autus.xyz > (Autus) http://www.autus.xyz
+## MOD Description: 	Adds dynamic avatars to your forums!
+## MOD Version: 	1.3.2
+## 
+## MOD Requirements:
+## 			- This MOD is stand-alone, meaning that it does NOT require any other MODs!
+## 			- If you want to use the 'Item Needed' feature, you'll need to install the 'Shop MOD' (by Zarath) or 'Advanced Dungeons & Rabbits' (by Seteo-Bloke) first! (OPTIONAL)
+## 
+## Installation Level: 	Easy 
+## Installation Time: 	10 Minutes 
+## Files To Edit: 	7 files
+## 			viewtopic.php
+## 			includes/usercp_viewprofile.php
+## 			language/lang_english/lang_admin.php
+## 			language/lang_english/lang_main.php
+## 			templates/subSilver/viewtopic_body.tpl
+## 			templates/subSilver/profile_view_body.tpl
+## 			templates/SubSilver/overall_header.tpl
+## Included Files: 	34 files
+##			nulavatar.php
+##			nulavatar_install.php
+##			admin/admin_nulavatar.php
+##			images/movelayers_down.gif
+##			images/movelayers_up.gif
+##			images/nulavatar/*.* (27 PNG images)
+##			images/nulavatar_avatars/*.* (just create the map and make sure to CHMOD it to 777)
+##			templates/subSilver/nulavatar_body.tpl
+##			templates/subSilver/admin/nulavatar_admin_body.tpl
+############################################################## 
+## Author Notes: 
+##	Make sure you run nulavatar_install.php to update your database!
+##	Make sure to CHMOD the folder images/nulavatar_avatars/ to 777!
+## 
+## 	All images were taken from Charas Project, and are the property of their creators!
+## 	>>> http://charas-project.net/index.php?lang=en
+## 
+############################################################## 
+## Many Thanks To:
+## 
+## 	Many thanks to Eric for giving us RPG developers a good place to talk
+## 	and for hosting all our MODs!
+## 	>>> http://mods.best-dev.com
+## 
+## 	Many thanks to everyone for their support, ideas, flames, worshipping, etc! ^_^
+## 
+############################################################## 
+## MOD History: 
+## 
+## Legend
+## - ADD: ADD => A feature that's been added to the MOD in that release
+## - UPD: UPDATE => A feature that's been (heavily) updated in that release
+## - FIX: FIX => A bug/glitch/error that's been fixed in that release
+## - CNG: CHANGE => Changed something in the MOD in that release (usually a filename)
+## 
+## 2017-07-16 - Version 1.3.2 
+## - CNG: The COPY function for the "images/nulavatar" and "images/nulavatar_avatars" folders was malformed. To save time and
+##	  restore EasyMod 0.4.0 compatibility, I've removed those COPY functions and added them to the DIY instructions. It's
+##	  an easy fix.
+## - CNG: Edited nulavatar_install.php; when creating table "nulavatar_images", the column title 'dontshowlayer' had a invalid
+##	  NOT NULL default value. This has been changed to NOT NULL default '0'.
+## - CNG: Edited nulavatar_install.php; when creating table "nulavatar_userchars", the column title 'user' had a invalid
+##	  NOT NULL default value. This has been changed to NOT NULL default '0'.
+## 
+## 2006-07-28 - Version 1.3.1 
+## - FIX: Admin panel and NA page should now work without the need to edit common.php anymore! At last :)
+## - FIX: It was possible to alter your own NulAvatar with images you shouldn't have access too (eg, images with item requirements
+##        which you didn't met). This was a big exploit and I recommend everyone to upgrade to v1.3.1 as soon as possible!
+##        (thanks to angelc0p (http://www.magivolve.com) for reporting this exploit!)
+## - CNG: Very small change; Updated the link to my site in the ACP to point to my new MODs site, http://mods.nuladion.net
+## 
+## 2006-01-22 - Version 1.3.0 
+## - ADD: Added support for Zaraths Shop MOD v3.0 :)
+## 
+## 2005-09-12 - Version 1.2.0a 
+## - Damn, seems like there were two minor errors in v1.2.0! But everything should work OK now :)
+##   FIX: Wrong filename declared in nulavatar.php (thanks Atrocities_Inc)
+##   FIX: Graphical display mode was not working properly in Firefox (thanks Atrocities_Inc)
+## 
+## 2005-08-14 - Version 1.2.0 
+## - FIX: Layers names which had a space in them could cause errors
+##   FIX: Using big images could cause the NulAvatar to overlap the layer dropdown boxes
+##   FIX: Version number wasn't always showing in the admin panels
+##   FIX: Install and update files weren't working if you didn't have REGISTER_GLOBALS turned on. They will work now!
+##   FIX: The breadcrumbs in the admin panels now work like they should (the "NulAvatar Admin Panel -> Images -> Add new Image" etc... links)
+##   FIX: Various other fixes...
+##   ADD: Display mode. You can now switch between Original and Graphical display mode. Original is the same as NA pre-v1.2.0. 
+##        Graphical shows every images on the NulAvatar page, and you can click on an image to wear it.
+##   ADD: Replace avatar. NulAvatars can now replace forum avatars at the viewtopic and viewprofile pages!
+## 
+## 2004-12-28 - Version 1.1.0 
+## - Darn, I'm so stupid... seems like I forgot to update the install file when I released v1.1.0 :/
+##   Install file has now been updated! Everyone who installed (NOT upgraded to) v1.1.0 should run the
+##   fix provided here: http://mods.best-dev.com/post15853.php#15853
+## 
+## 2004-09-11 - Version 1.1.0 
+## - FIX: Prevent users from accessing NulAvatar if there aren't any layers yet
+##   FIX: Prevent admin from accessing Images Admin if there aren't any layers yet
+##   FIX: NulAvatar was showing the wrong images when you hit 'Go Back' or first openened to page (thanks for fixing, theanimewizard!)
+##   ADD: Advanced Dungeons & Rabbits support (with Moogies/ADR switch) (thanks to Seteo-Bloke for the ADR code!)
+##   ADD: GIF images can now be used instead of PNG images (switch is in admin panel)
+##   ADD: Added script to check if GD is enabled to install and update files
+##   ADD: Added auto-CHMOD command to install and update files
+##   ADD: Added location links to ACP and Nulavatar.php
+##   ADD: NulAvatar now works with NulUpdate :)
+## 
+## 2004-05-31 - Version 1.0.0 
+## - Seems like it works, so BETA version is released.
+##   Thanks for testing Seteo-bloke, HFD and Gandalf The White!
+## 
+## 2004-05-31 - Version 0.0.1 
+## - Released the MOD for testing...
+##   Once I know it works OK, I'll put it into BETA/FINAL (depends on if I'll add new stuff)!
+## 
+############################################################## 
+## Before Adding This MOD To Your Forum, You Should Back Up All Files Related To This MOD 
+##############################################################
+
+# 
+#-----[ COPY ]------------------------------------------ 
+# 
+COPY nulavatar.php TO nulavatar.php
+COPY admin/admin_nulavatar.php TO admin/admin_nulavatar.php
+COPY images/movelayers_down.gif TO images/movelayers_down.gif
+COPY images/movelayers_up.gif TO images/movelayers_up.gif
+COPY templates/subSilver/nulavatar_body.tpl TO templates/subSilver/nulavatar_body.tpl
+COPY templates/subSilver/admin/nulavatar_admin_body.tpl TO templates/subSilver/admin/nulavatar_admin_body.tpl
+COPY nulavatar_install.php TO nulavatar_install.php
+
+# 
+#-----[ DIY INSTRUCTIONS ]------------------------------------------ 
+#
+# 
+1) Manually copy the images/nulavatar folder and its contents to the root. It should then look like "ROOT/images/nulavatar"; you will save your avatar items in this folder.
+2) In "ROOT/images", create a new folder called "nulavatar_avatars". Then, CHMOD (change permissions) of the folder to 777. Avatars will be saved in here once the user applies the desired changes.
+3) Run nulavatar_install.php from your browser in order to update your database, then you can delete it. The path in your browser to this file could look something like this: http://yourdomain.com/phpBB2/nulavatar_install.php
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+viewtopic.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+	//
+	// Note! The order used for parsing the message _is_ important, moving things around could break any
+	// output
+	//
+
+# 
+#-----[ BEFORE, ADD ]------------------------------------------ 
+# 
+	// NulAvatar [START]
+		if(file_exists($phpbb_root_path."images/nulavatar_avatars/".$postrow[$i]['user_id'].".png"))
+		{ $nulavatar = '<img src="'.$phpbb_root_path.'images/nulavatar_avatars/'.$postrow[$i]['user_id'].'.png"><br />'; }
+		else { $nulavatar = ''; }
+
+		// Check if NA replaces the forum avatar!
+		$sql = "SELECT config_value FROM ". $table_prefix ."nulavatar_settings WHERE config_name = 'replaceavatar' "; 
+		if ( !($result = $db->sql_query($sql)) ) { message_die(GENERAL_ERROR, 'Error retrieving data', '', __LINE__, __FILE__, $sql); } 
+
+		while ( $row = $db->sql_fetchrow($result) ) 
+		{
+			if($row['config_value'] == 1) {
+				$poster_avatar = '';
+			}
+			if(($row['config_value'] == 2) && ($nulavatar != '')) {
+				$poster_avatar = '';
+			}
+		}
+	// NulAvatar [END]
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+		'SIGNATURE' => $user_sig,
+		'EDITED_MESSAGE' => $l_edited_by,
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+		// NulAvatar [START]
+		'NULAVATAR' => $nulavatar,
+		// NulAvatar [END]
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+includes/usercp_viewprofile.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+//
+// Generate page
+//
+
+# 
+#-----[ BEFORE, ADD ]------------------------------------------ 
+# 
+// NulAvatar [START]
+	// Check if user has an Avatar. If so, display it!
+	if(file_exists($phpbb_root_path."images/nulavatar_avatars/".$profiledata['user_id'].".png"))
+	{ $nulavatar = '<img src="'.$phpbb_root_path.'images/nulavatar_avatars/'.$profiledata['user_id'].'.png"><br />'; }
+	else { $nulavatar = ''; }
+
+	// Check if NA replaces the forum avatar!
+	$sql = "SELECT config_value FROM ". $table_prefix ."nulavatar_settings WHERE config_name = 'replaceavatar' "; 
+	if ( !($result = $db->sql_query($sql)) ) { message_die(GENERAL_ERROR, 'Error retrieving data', '', __LINE__, __FILE__, $sql); } 
+
+	while ( $row = $db->sql_fetchrow($result) ) 
+	{
+		if($row['config_value'] == 1) {
+			$avatar_img = '';
+		}
+		if(($row['config_value'] == 2) && ($nulavatar != '')) {
+			$avatar_img = '';
+		}
+	}
+// NulAvatar [END]
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+	'AVATAR_IMG' => $avatar_img,
+
+# 
+#-----[ AFTER, ADD ]------------------------------------------ 
+# 
+	// NulAvatar [START]
+	'NULAVATAR' => $nulavatar,
+	// NulAvatar [END]
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+language/lang_english/lang_admin.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+?>
+
+# 
+#-----[ BEFORE, ADD ]------------------------------------------ 
+# 
+//
+// --- [ NulAvatar MOD ] --- [START]
+// By Nuladion (Guido Kessels) < http://mods.nuladion.net >
+//
+
+// NulAvatar
+$lang['nulavatar_name'] = 'Name';
+$lang['nulavatar_edit'] = 'Edit';
+$lang['nulavatar_delete'] = 'Delete';
+$lang['nulavatar_Yes'] = 'Yes';
+$lang['nulavatar_No'] = 'No';
+$lang['nulavatar_create'] = 'Create';
+$lang['nulavatar_didnt_fill_all_fields'] = "You didn't fill in all the required fields!";
+$lang['nulavatar_error'] = 'Error';
+$lang['nulavatar_go_back'] = 'Go Back';
+$lang['nulavatar_image'] = "Image";
+$lang['nulavatar_script_none'] = "None";
+$lang['nulavatar_admin_help'] = "Here you can configure NulAvatar! Your users are able to create their own avatars from the images you select. You can also set item requirements for each image, so an user has to buy the item with that name first before he/she can select that image for their character!<br /><br />This character system uses so-called 'layers', which are basically the order of the images; which one goes at the top, etc.<br /><br />To edit the character images themselves you'll have to click the 'Edit Images' button! After you've set up some layers, you can assign images to each layer. It's actually pretty easy! Just look around a little and see what each option does, you'll get amazing results!";
+$lang['nulavatar_character_sprites'] = "Character Sprites";
+$lang['nulavatar_edit_layers'] = "Edit Layers";
+$lang['nulavatar_edit_images'] = "Edit Images";
+$lang['nulavatar_move_up'] = "Move Up";
+$lang['nulavatar_move_down'] = "Move Down";
+$lang['nulavatar_position'] = "Position";
+$lang['nulavatar_compulsive'] = "Compulsive";
+$lang['nulavatar_compulsive_explain'] = "If you set this to 'No', users will be able to select '[none]' which will result in a blank spot for this layer. This can be good for certain optional layers, but should not be used for required layers like the skin and head!";
+$lang['nulavatar_move'] = "Move Layer";
+$lang['nulavatar_newlayer'] = "New Layer";
+$lang['nulavatar_createnewlayer'] = "Create a new layer";
+$lang['nulavatar_newlayer_succesful'] = "Layer created succesfully!";
+$lang['nulavatar_layerdeleted_succesful'] = "Layer deleted succesfully!";
+$lang['nulavatar_nolayerselected'] = "No layer specified!";
+$lang['nulavatar_layer_moved_succesful'] = "Layer moved succesfully!";
+$lang['nulavatar_layer_move_error_up'] = "Failed to move layer up!";
+$lang['nulavatar_layer_move_error_down'] = "Failed to move layer down!";
+$lang['nulavatar_layer_move_is_up'] = "Selected layer is already the top layer!";
+$lang['nulavatar_layer_move_is_down'] = "Selected layer is already the bottom layer!";
+$lang['nulavatar_editlayer'] = "Edit layer";
+$lang['nulavatar_editlayer_succesful'] = "Layer edited succesfully!";
+$lang['nulavatar_layer'] = "Layer";
+$lang['nulavatar_itemneeded'] = "Item Needed";
+$lang['nulavatar_itemneeded_explain'] = "Enter the name of the item which the user has to have to select this image! Make sure you use correct capitalization!<br />Leave blank if you do not want to use this feature!";
+$lang['nulavatar_dontshowlayer'] = "Don't show layer";
+$lang['nulavatar_dontshowlayer_explain'] = "If this image is selected, the layer you select here will not be shown. Like if you select a certain helmet you do not want the hair layer to show!<br />Choose <b>[none]</b> if you don't want to use this feature!";
+$lang['nulavatar_dont_use_nolayer'] = "[none]";
+$lang['nulavatar_addimage'] = "Add image";
+$lang['nulavatar_addimage_succesful'] = "Image added succesfully!";
+$lang['nulavatar_noimageselected'] = "No image specified!";
+$lang['nulavatar_imagedeleted_succesful'] = "Image deleted succesfully!";
+$lang['nulavatar_imagedeleted_succesful_explain'] = "(The image has been deleted from the database, but it is still on your FTP! <br />You will have to remove the image from your FTP manually if you do not want it anymore!)";
+$lang['nulavatar_editimage'] = "Edit image";
+$lang['nulavatar_editimage_succesful'] = "Image edited succesfully!";
+$lang['nulavatar_nolayers'] = "You'll have to create some layers before you can add any images!";
+
+// Locations
+$lang['nulavatar_loc_admin'] = "NulAvatar Admin Panel";
+$lang['nulavatar_loc_main'] = "Main";
+$lang['nulavatar_loc_layers'] = "Layers";
+$lang['nulavatar_loc_addlayer'] = "Add a Layer";
+$lang['nulavatar_loc_dellayer'] = "Delete Layer";
+$lang['nulavatar_loc_movelayer'] = "Move a Layer";
+$lang['nulavatar_loc_editlayer'] = "Edit Layer";
+$lang['nulavatar_loc_images'] = "Images";
+$lang['nulavatar_loc_addimage'] = "Add an Image";
+$lang['nulavatar_loc_delimage'] = "Delete an Image";
+$lang['nulavatar_loc_editimage'] = "Edit Image";
+
+// NulAvatar Settings
+$lang['nulavatar_settings'] = "Settings";
+$lang['nulavatar_change'] = "Submit";
+$lang['nulavatar_submit_changes'] = "Submit Changes";
+$lang['nulavatar_settings_saved_succesfully'] = "Settings saved succesfully!";
+$lang['nulavatar_settings_title_avatars'] = "Avatar Configuration";
+$lang['nulavatar_settings_avatar_height'] = "<b>Avatar Height</b>";
+$lang['nulavatar_settings_avatar_width'] = "<b>Avatar Width</b>";
+$lang['nulavatar_settings_title_rpgmod'] = "RPG System";
+$lang['nulavatar_settings_rpgsystem'] = "<b>RPG MODification</b><br />If you have Zaraths Shop MOD v1.2.0 - 2.6.0, select <i>Shop MOD</i>. If you have v3.0.0+ of his MOD, select <i>Shop MOD v3</i>.<br />If you do not have a RPG MOD nor the Shop MOD, select <i>Shop MOD</i> and make sure not to use the <i>Item Needed</i> field when adding/editing images!";
+$lang['nulavatar_settings_rpgsystem_moogies'] = "Shop MOD";
+$lang['nulavatar_settings_rpgsystem_shop3'] = "Shop MOD v3";
+$lang['nulavatar_settings_rpgsystem_adr'] = "Advanced Dungeons & Rabbits";
+$lang['nulavatar_settings_imagetype'] = "<b>Imagetype</b><br />The format of your layer images! <i>NOT</i> of the exported image (will always be PNG)!";
+$lang['nulavatar_settings_imagetype_png'] = "PNG";
+$lang['nulavatar_settings_imagetype_gif'] = "GIF";
+$lang['nulavatar_settings_title_generalconfig'] = "General Config";
+$lang['nulavatar_settings_display'] = "<b>Display Mode</b><br />The way of displaying the NulAvatar items. <i>Original</i> works with dropdown boxes for each layer (like NA v1.0.0 and v1.1.0), <i>Graphical</i> displays every image on the NulAvatar page on which you can click to change layer.";
+$lang['nulavatar_settings_display_0'] = "Original";
+$lang['nulavatar_settings_display_1'] = "Graphical";
+$lang['nulavatar_settings_eamountofitems'] = "<b>Amount of Items</b><br />If <i>Graphical</i> has been selected as <i>Display Mode</i>, specify here how many items NA should show per row.";
+$lang['nulavatar_settings_replaceavatar'] = "<b>Replace Avatar</b><br />If set to <i>Yes</i> the users forum avatar will be replaced by their NulAvatar (if they have one, else nothing will be shown). If set to <i>No</i> both their forum avatar and NulAvatar will be shown. If set to <i>Only if user has NulAvatar</i> the users NulAvatar will be shown if the user has one. If they haven't, their forum avatar will be shown.";
+$lang['nulavatar_settings_replaceavatar_0'] = "No";
+$lang['nulavatar_settings_replaceavatar_1'] = "Yes";
+$lang['nulavatar_settings_replaceavatar_2'] = "Only if user has NulAvatar";
+
+//
+// --- [ NulAvatar MOD ] --- [END]
+//
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+language/lang_english/lang_main.php
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+?>
+
+# 
+#-----[ BEFORE, ADD ]------------------------------------------ 
+# 
+//
+// --- [ NulAvatar MOD ] --- [START]
+// By Nuladion (Guido Kessels) < http://mods.nuladion.net >
+//
+
+$lang['nulavatar_character_sprite'] = "'s Avatar";
+$lang['nulavatar_sprite_created_succesfully'] = "Avatar changed succesfully!";
+$lang['nulavatar_character_editor'] = "NulAvatar";
+$lang['nulavatar_this_image'] = "This image";
+$lang['nulavatar_at_layer'] = "at layer";
+$lang['nulavatar_will_hide_this_layer'] = "will hide this layer";
+$lang['nulavatar_proceed'] = "Proceed";
+$lang['nulavatar_go_back'] = "Go Back";
+$lang['nulavatar_noshow_warning'] = "The Administrator has specified that one or more of the images you selected, will result in the hiding of one or more other images. Below is given a list with the images which affect an other layer. Also is given which layer theses images are at, and which layer they affect! Click 'Proceed' if you want to continue anyways, or hit 'Go Back' if you want to change your Avatar!";
+$lang['nulavatar_noshow_warning_header'] = "Warning";
+$lang['nulavatar_name'] = 'Name';
+$lang['nulavatar_Yes'] = 'Yes';
+$lang['nulavatar_No'] = 'No';
+$lang['nulavatar_image'] = "Image";
+$lang['nulavatar_script_none'] = "None";
+$lang['nulavatar_dont_use_nolayer'] = "[none]";
+$lang['nulavatar_go'] = "Go";
+$lang['nulavatar_compulsive'] = "Compulsive";
+$lang['nulavatar_nolayers'] = "The Administrator still needs to configure NulAvatar.<br />Please come back soon!";
+$lang['nulavatar_no_image'] = "no image";
+$lang['nulavatar_invalidpage'] = "You are only allowed to save your avatar from the NulAvatar page.";
+
+//
+// --- [ NulAvatar MOD ] --- [END]
+//
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+templates/subSilver/viewtopic_body.tpl
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+{postrow.POSTER_AVATAR}
+
+# 
+#-----[ BEFORE, ADD ]------------------------------------------ 
+# 
+{postrow.NULAVATAR}
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+templates/subSilver/profile_view_body.tpl
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# 
+{AVATAR_IMG}
+
+# 
+#-----[ BEFORE, ADD ]------------------------------------------ 
+# 
+{NULAVATAR}
+
+# 
+#-----[ OPEN ]------------------------------------------ 
+# 
+templates/subSilver/overall_header.tpl
+
+# 
+#-----[ FIND ]------------------------------------------ 
+# You can place it anywhere you want, but if you're not sure where to place the link, do it here! ^_^
+# 
+{L_LOGIN_LOGOUT}</a>&nbsp;
+
+# 
+#-----[ IN-LINE, AFTER, ADD ]------------------------------------------ 
+# 
+<a href="nulavatar.php" class="mainmenu">NulAvatar</a>&nbsp;
+
+# 
+#-----[ SAVE/CLOSE ALL FILES ]------------------------------------------ 
+# 
+# EoM 
